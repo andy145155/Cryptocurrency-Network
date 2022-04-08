@@ -2,6 +2,8 @@
 
 This is the project for EE4017 Internet Finance 
 
+Python version: 3.9.12
+
 ## Installation
 
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install required dependency.
