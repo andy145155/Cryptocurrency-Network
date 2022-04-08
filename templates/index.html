@@ -5,7 +5,7 @@
   </head>
   <body>
     <div>
-      <h2>User at PORT:{{user}}</h2>
+      <h1>User at PORT:{{user}}</h1>
       <form id="post_button_5001" action="/register_node" method="POST">
         <input
           type="submit"
@@ -27,14 +27,14 @@
       </form>
       <hr />
       <form id="fullchain" action="/fullchain" method="GET">
-        <div>Show full chain</div>
+        <h2>Show full chain</h2>
         <input type="submit" value="3. fullchain" />
         <div id="chain"></div>
         <div id="length"></div>
       </form>
       <hr />
       <form id="mine" action="/mine" method="GET">
-        <div>Mine</div>
+        <h2>Mine</h2>
         <input type="submit" value="4. mine" />
         <div id="hash"></div>
         <div id="index"></div>
@@ -45,20 +45,40 @@
         <div id="transactions_recipient"></div>
         <div id="transactions_value"></div>
       </form>
+      <hr />
+      <h2>Transactions</h2>
+      <form id="transaction" action="/new_transaction" method="POST">
+        <label for="recipient">Recipient: </label>
+        <input
+          name="recipient"
+          type="text"
+          required
+          placeholder="Please enter the recipient"
+        />
+
+        <label for="value">Value: </label>
+        <input
+          name="value"
+          type="text"
+          required
+          placeholder="Please enter the value"
+        />
+
+        <button type="submit">Send</button>
+        <div id="transaction_message"></div>
+      </form>
     </div>
 
     <script>
+      /* This is the Javascript for getting connect 5000 data */
       $("#post_button_5001").submit(function (event) {
-        /* stop form from submitting normally */
         event.preventDefault();
 
-        /* get some values from elements on the page: */
         var $form = $(this),
           $submit = $form.find('button[type="submit"]'),
           name_value = $form.find('input[name="node"]').val(),
           url = $form.attr("action");
 
-        /* Send the data using post */
         var posting = $.post(url, {
           node: "127.0.0.1:5000",
         });
@@ -69,18 +89,14 @@
           $("#nodes").html(data.total_nodes);
         });
       });
-
+      /* This is the Javascript for getting connect 5001 data */
       $("#post_button_5002").submit(function (event) {
-        /* stop form from submitting normally */
         event.preventDefault();
-
-        /* get some values from elements on the page: */
         var $form = $(this),
           $submit = $form.find('button[type="submit"]'),
           name_value = $form.find('input[name="node"]').val(),
           url = $form.attr("action");
 
-        /* Send the data using post */
         var posting = $.post(url, {
           node: "127.0.0.1:5001",
         });
@@ -92,32 +108,61 @@
         });
       });
 
+      /*This is the Javascript for getting full chain data*/
       $("#fullchain").submit(function (event) {
-        /* stop form from submitting normally */
         event.preventDefault();
         $.get("/fullchain", function (data, statusText, xhr) {
           if (xhr.status == 200) {
-              console.log(data);
+            console.log(data);
             $("#chain").html(JSON.parse(data.chain));
-            $("#length").html("Length: "+ data.length);
+            $("#length").html("Length: " + data.length);
           }
         });
       });
+
+      /*This is the Javascript to get mine data*/
       $("#mine").submit(function (event) {
-        /* stop form from submitting normally */
         event.preventDefault();
         $.get("/mine", function (data, statusText, xhr) {
           if (xhr.status == 200) {
-              console.log(JSON.parse(data.transactions[0]).sender);
+            console.log(JSON.parse(data.transactions[0]).sender);
             $("#hash").html("Hash: " + data.hash);
-            $("#index").html("Index: "+ data.index);
-            $("#nonce").html("Nonce: "+ data.nonce);
-            $("#previous_hash").html("Previous hash: "+ data.previous_hash);
-            $("#timestamp").html("Timestamp: "+ data.timestamp);
-            $("#transactions_sender").html("Transactions sender: "+ JSON.parse(data.transactions[0]).sender);
-            $("#transactions_recipient").html("Transactions recipient: "+ JSON.parse(data.transactions[0]).recipient);
-            $("#transactions_value").html("Transactions value: "+ JSON.parse(data.transactions[0]).value);
+            $("#index").html("Index: " + data.index);
+            $("#nonce").html("Nonce: " + data.nonce);
+            $("#previous_hash").html("Previous hash: " + data.previous_hash);
+            $("#timestamp").html("Timestamp: " + data.timestamp);
+            $("#transactions_sender").html(
+              "Transactions sender: " + JSON.parse(data.transactions[0]).sender
+            );
+            $("#transactions_recipient").html(
+              "Transactions recipient: " +
+                JSON.parse(data.transactions[0]).recipient
+            );
+            $("#transactions_value").html(
+              "Transactions value: " + JSON.parse(data.transactions[0]).value
+            );
           }
+        });
+      });
+
+      /*This is the Javascript for transaction*/
+      $("#transaction").submit(function (event) {
+        event.preventDefault();
+        var $form = $(this),
+          $submit = $form.find('button[type="submit"]'),
+          recipient_value = $form.find('input[name="recipient"]').val(),
+          value = $form.find('input[name="value"]').val(),
+          url = $form.attr("action");
+
+        /* Send the data using post */
+        var posting = $.post(url, {
+          recipient_address: recipient_value,
+          amount: value,
+        });
+
+        posting.done(function (data) {
+            console.log(data);
+          $("#transaction_message").html(data.message);
         });
       });
     </script>

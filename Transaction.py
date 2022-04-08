@@ -7,10 +7,11 @@ import binascii
 import json
 
 class Transaction:
-    def __init__(self, sender, recipient, value):
+    def __init__(self, sender, recipient, value, signature):
         self.sender = sender
         self.recipient = recipient
         self.value = value
+        self.signature = signature
 
     def to_dict(self):
         return({'sender': self.sender, 'recipient': self.recipient, 'value': self.value})

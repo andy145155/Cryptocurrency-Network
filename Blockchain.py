@@ -58,7 +58,8 @@ class Blockchain:
         block_reward = Transaction(
             "Block_Reward",
             myWallet.identity,
-            "5.0"
+            "5.0",
+            None
         ).to_json()
         print(json.loads(self.chain[-1]))
         self.unconfirmed_transactions.insert(0, block_reward)

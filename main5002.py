@@ -22,7 +22,8 @@ def new_transaction():
     transaction = Transaction(
         myWallet.identity,
         values['recipient_address'],
-        values['amount']
+        values['amount'],
+        None
     )
     transaction.add_signature(myWallet.sign_transaction(transaction))
     transaction_result = blockchain.add_new_transaction(transaction)
