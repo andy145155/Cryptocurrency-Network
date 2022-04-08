@@ -1,5 +1,5 @@
 import json
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 import requests
 from Blockchain import Blockchain
 from Transaction import Transaction
@@ -8,6 +8,10 @@ from Wallet import Wallet
 
 
 app = Flask(__name__)
+
+@app.route("/")
+def index():
+    return render_template("index.html", user = 5000)
 
 @app.route('/new_transaction', methods=['POST'])
 def new_transaction():
@@ -109,6 +113,7 @@ def mine():
         'previous_hash': newblock.previous_hash
     }
     return jsonify(response), 200
+
 
 if __name__ == '__main__':
     myWallet = Wallet()

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+  </head>
+  <body>
+    <div>
+      <h2>User at PORT:{{user}}</h2>
+      <form
+        id="post_button_5001"
+        action="/register_node"
+        method="POST"
+      >
+        <input type="submit" name="node" value="Connect to Port 5000(For Port 5001)"/>
+        <div id="message"></div>
+        <div id="nodes"></div>
+      </form>
+
+      <form
+        id="post_button_5002"
+        action="/register_node"
+        method="POST"
+      >
+        <input type="submit" name="node" value="Connect to Port 5001(For Port 5002)"/>
+        <div id="message2"></div>
+        <div id="nodes2"></div>
+      </form>
+    </div>
+
+    <script>
+      $("#post_button_5001").submit(function (event) {
+        /* stop form from submitting normally */
+        event.preventDefault();
+
+        /* get some values from elements on the page: */
+        var $form = $(this),
+          $submit = $form.find('button[type="submit"]'),
+          name_value = $form.find('input[name="node"]').val(),
+          url = $form.attr("action");
+
+        /* Send the data using post */
+        var posting = $.post(url, {
+          node: "127.0.0.1:5000",
+        });
+
+        posting.done(function (data) {
+          console.log(data.total_nodes);
+          $("#message").html(data.message);
+          $("#nodes").html(data.total_nodes);
+        });
+      });
+
+      $("#post_button_5002").submit(function (event) {
+        /* stop form from submitting normally */
+        event.preventDefault();
+
+        /* get some values from elements on the page: */
+        var $form = $(this),
+          $submit = $form.find('button[type="submit"]'),
+          name_value = $form.find('input[name="node"]').val(),
+          url = $form.attr("action");
+
+        /* Send the data using post */
+        var posting = $.post(url, {
+          node: "127.0.0.1:5001",
+        });
+
+        posting.done(function (data) {
+          console.log(data.total_nodes);
+          $("#message2").html(data.message);
+          $("#nodes2").html(data.total_nodes);
+        });
+      });
+    </script>
+  </body>
+</html>

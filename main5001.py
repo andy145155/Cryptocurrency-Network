@@ -1,5 +1,5 @@
 import json
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 import requests
 from Blockchain import Blockchain
 from Transaction import Transaction
@@ -7,6 +7,10 @@ from Wallet import Wallet
 
 
 app = Flask(__name__)
+
+@app.route("/")
+def index():
+    return render_template("index.html", user=5001)
 
 
 @app.route('/new_transaction', methods=['POST'])
@@ -63,6 +67,7 @@ def get_nodes():
 @app.route("/register_node", methods=['POST'])
 def register_node():
     value = request.form
+    print(value)
     node = value.get('node')
     com_port = value.get('com_port')
     if com_port is not None:
