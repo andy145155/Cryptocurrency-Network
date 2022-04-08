@@ -6,24 +6,44 @@
   <body>
     <div>
       <h2>User at PORT:{{user}}</h2>
-      <form
-        id="post_button_5001"
-        action="/register_node"
-        method="POST"
-      >
-        <input type="submit" name="node" value="Connect to Port 5000(For Port 5001)"/>
+      <form id="post_button_5001" action="/register_node" method="POST">
+        <input
+          type="submit"
+          name="node"
+          value="1. Connect to Port 5000(For Port 5001 used)"
+        />
         <div id="message"></div>
         <div id="nodes"></div>
       </form>
-
-      <form
-        id="post_button_5002"
-        action="/register_node"
-        method="POST"
-      >
-        <input type="submit" name="node" value="Connect to Port 5001(For Port 5002)"/>
+      <hr />
+      <form id="post_button_5002" action="/register_node" method="POST">
+        <input
+          type="submit"
+          name="node"
+          value="2. Connect to Port 5001(For Port 5002 used)"
+        />
         <div id="message2"></div>
         <div id="nodes2"></div>
+      </form>
+      <hr />
+      <form id="fullchain" action="/fullchain" method="GET">
+        <div>Show full chain</div>
+        <input type="submit" value="3. fullchain" />
+        <div id="chain"></div>
+        <div id="length"></div>
+      </form>
+      <hr />
+      <form id="mine" action="/mine" method="GET">
+        <div>Mine</div>
+        <input type="submit" value="4. mine" />
+        <div id="hash"></div>
+        <div id="index"></div>
+        <div id="nonce"></div>
+        <div id="previous_hash"></div>
+        <div id="timestamp"></div>
+        <div id="transactions_sender"></div>
+        <div id="transactions_recipient"></div>
+        <div id="transactions_value"></div>
       </form>
     </div>
 
@@ -69,6 +89,35 @@
           console.log(data.total_nodes);
           $("#message2").html(data.message);
           $("#nodes2").html(data.total_nodes);
+        });
+      });
+
+      $("#fullchain").submit(function (event) {
+        /* stop form from submitting normally */
+        event.preventDefault();
+        $.get("/fullchain", function (data, statusText, xhr) {
+          if (xhr.status == 200) {
+              console.log(data);
+            $("#chain").html(JSON.parse(data.chain));
+            $("#length").html("Length: "+ data.length);
+          }
+        });
+      });
+      $("#mine").submit(function (event) {
+        /* stop form from submitting normally */
+        event.preventDefault();
+        $.get("/mine", function (data, statusText, xhr) {
+          if (xhr.status == 200) {
+              console.log(JSON.parse(data.transactions[0]).sender);
+            $("#hash").html("Hash: " + data.hash);
+            $("#index").html("Index: "+ data.index);
+            $("#nonce").html("Nonce: "+ data.nonce);
+            $("#previous_hash").html("Previous hash: "+ data.previous_hash);
+            $("#timestamp").html("Timestamp: "+ data.timestamp);
+            $("#transactions_sender").html("Transactions sender: "+ JSON.parse(data.transactions[0]).sender);
+            $("#transactions_recipient").html("Transactions recipient: "+ JSON.parse(data.transactions[0]).recipient);
+            $("#transactions_value").html("Transactions value: "+ JSON.parse(data.transactions[0]).value);
+          }
         });
       });
     </script>
