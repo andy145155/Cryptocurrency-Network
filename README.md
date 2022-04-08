@@ -1,1 +1,6 @@
 # Crypto
+
+Install dependency
+pip3 install pycryptodome
+pip3 install flask
+pip3 install requests
