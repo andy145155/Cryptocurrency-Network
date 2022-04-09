@@ -113,8 +113,14 @@
         event.preventDefault();
         $.get("/fullchain", function (data, statusText, xhr) {
           if (xhr.status == 200) {
-            console.log(data);
-            $("#chain").html(JSON.parse(data.chain));
+            console.log(JSON.parse(data.chain));
+            console.log(JSON.parse(data.chain).length);
+            let string = "";
+            JSON.parse(data.chain).map((element) => {
+              string = string + "<br/>" +"<br/>" +element;
+              console.log(element);
+            });
+            $("#chain").html(string);
             $("#length").html("Length: " + data.length);
           }
         });
@@ -161,7 +167,7 @@
         });
 
         posting.done(function (data) {
-            console.log(data);
+          console.log(data);
           $("#transaction_message").html(data.message);
         });
       });

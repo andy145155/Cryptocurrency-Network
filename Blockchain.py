@@ -17,9 +17,16 @@ class Blockchain:
 
     def create_genesis_block(self):
         genesis_block = Block(
-            0, [], datetime.now().strftime("%m/%d/%Y, %H:%M:%S"), "0", None, 0)
-        genesis_block.hash = genesis_block.compute_hash()
-        self.chain.append(genesis_block.to_json())
+            0, [], datetime.now().strftime("%m/%d/%Y, %H:%M:%S"), "0" * 64, None, 0)
+    
+        while True:
+            if genesis_block.compute_hash()[:self.difficulty] == "0" * self.difficulty:
+                genesis_block.hash = genesis_block.compute_hash()
+                self.chain.append(genesis_block.to_json())
+                break
+            else:
+                print(genesis_block.nonce)
+                genesis_block.nonce += 1
 
     def add_new_transaction(self, transaction: Transaction):
         if transaction.verify_transaction_signature():
@@ -142,7 +149,7 @@ class Blockchain:
                     if not current_transaction.verify_transaction_signature():
                         print("2")
                         return False
-                if not current_index==0 and not self.is_valid_proof(current_block, block['hash']):
+                if not self.is_valid_proof(current_block, block['hash']):
                     print("3")
                     return False
             current_index += 1
