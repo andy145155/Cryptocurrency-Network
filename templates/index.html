@@ -30,6 +30,7 @@
         <h2>Show full chain</h2>
         <input type="submit" value="3. fullchain" />
         <div id="chain"></div>
+        <hr />
         <div id="length"></div>
       </form>
       <hr />
@@ -67,6 +68,28 @@
         <button type="submit">Send</button>
         <div id="transaction_message"></div>
       </form>
+       <hr />
+       <form id="wallet" action="/get_wallet" method="GET">
+        <h2>Wallet Identity</h2>
+        <input type="submit" value="3. fullchain" />
+        <div id="identity"></div>
+      </form>
+    </div>
+      <hr />
+      <h2>Change Difficulties</h2>
+      <form id="difficulty" action="/change_difficuly" method="POST">
+        <label for="diff_value">Please input your difficulty: </label>
+        <input
+          name="diff_value"
+          type="text"
+          required
+          placeholder="Please enter the the difficulty"
+        />
+        <button type="submit">Send</button>
+        <div id="difficulty_message"></div>
+      </form>
+
+      
     </div>
 
     <script>
@@ -169,6 +192,37 @@
         posting.done(function (data) {
           console.log(data);
           $("#transaction_message").html(data.message);
+        });
+      });
+
+      /*This is the Javascript for change in difficulty*/
+      $("#difficulty").submit(function (event) {
+        event.preventDefault();
+        var $form = $(this),
+          $submit = $form.find('button[type="submit"]'),
+          number = $form.find('input[name="diff_value"]').val(),
+          url = $form.attr("action");
+
+        /* Send the data using post */
+        var posting = $.post(url, {
+          number: number
+        });
+
+        posting.done(function (data) {
+          console.log(data);
+          $("#difficulty_message").html(data);
+        });
+      });
+
+       /*This is the Javascript to get wallet data*/
+      $("#wallet").submit(function (event) {
+        event.preventDefault();
+        $.get("/get_wallet", function (data, statusText, xhr) {
+          if (xhr.status == 200) {
+            console.log((data));
+            $("#identity").html(data);
+            
+          }
         });
       });
     </script>

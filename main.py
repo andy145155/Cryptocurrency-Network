@@ -1,3 +1,4 @@
+from crypt import methods
 import json
 from flask import Flask, jsonify, request, render_template
 import requests
@@ -12,6 +13,18 @@ app = Flask(__name__)
 @app.route("/")
 def index():
     return render_template("index.html", user = 5000)
+
+
+@app.route("/get_wallet")
+def get_wallet():
+    return jsonify(myWallet.identity), 200
+
+@app.route("/change_difficuly", methods=['POST'])
+def change_difficuly():
+    values = request.form
+    number = values.get('number')
+    Blockchain.difficulty = number
+    return "successfully change difficuly to " + str(number)
 
 @app.route('/new_transaction', methods=['POST'])
 def new_transaction():

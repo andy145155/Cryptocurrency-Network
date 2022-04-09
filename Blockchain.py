@@ -10,6 +10,7 @@ from datetime import datetime
 class Blockchain:
     difficulty = 2
     nodes = set()
+
     def __init__(self):
         self.unconfirmed_transactions = []
         self.chain = []
@@ -25,7 +26,6 @@ class Blockchain:
                 self.chain.append(genesis_block.to_json())
                 break
             else:
-                print(genesis_block.nonce)
                 genesis_block.nonce += 1
 
     def add_new_transaction(self, transaction: Transaction):
@@ -51,12 +51,12 @@ class Blockchain:
     def is_valid_proof(self, block, block_hash):
         print("This is block hash: ", block_hash)
         print("This is block compute hash: ", block.compute_hash())
-        return (block_hash.startswith('0' * Blockchain.difficulty) and block_hash == block.compute_hash())
-
+        return (block_hash.startswith('0' * int(Blockchain.difficulty)) and block_hash == block.compute_hash())
+        
     def proof_of_work(self, block):
         block.nounce = 0
         computed_hash = block.compute_hash()
-        while not computed_hash.startswith('0' * Blockchain.difficulty):
+        while not computed_hash.startswith('0' * int(Blockchain.difficulty)):
             block.nonce += 1
             computed_hash = block.compute_hash()
         return computed_hash
