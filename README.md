@@ -17,16 +17,14 @@ Running device: Macbook Pro 2021
 git clone https://github.com/andy145155/Cryptocurrency-Network.git
 ```
 
-## Setup a virtual environment 
+2. Setup a virtual environment 
 ```bash
 pip3 install virtualenv
 virtualenv crypto
 source crypto/bin/activate
 ```
-## Installation
 
-Use the package manager [pip3](https://pip.pypa.io/en/stable/) to install required dependency.
-
+3.Install required pip packages
 ```bash
 pip3 install pycryptodome
 pip3 install flask
@@ -55,10 +53,12 @@ source crypto/bin/activate
 python3 main5002.py
 ```
 
-## Demonstration
+## Usage
 
 You will see nothing is connected to the node initially by entering the url path: 
 
 http://127.0.0.1:5000/get_nodes
+
 http://127.0.0.1:5001/get_nodes
+
 http://127.0.0.1:5002/get_nodes
