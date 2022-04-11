@@ -3,6 +3,7 @@
 This is the project for EE4017 Internet Finance 
 
 Python version: 3.9.12
+
 Running device: Macbook Pro 2021 
 
 ## Cloning the repository
