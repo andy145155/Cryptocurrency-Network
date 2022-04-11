@@ -2,6 +2,8 @@
 
 This is the project for EE4017 Internet Finance 
 
+![Alt text](pic/5000.png "Title")
+
 Python version: 3.9.12
 
 Running device: Macbook Pro 2021 
@@ -32,19 +34,19 @@ pip3 install requests
 
 Open 3 Terminal tabs and run the following code in each terminal.
 
-First terminal window
+The 1st terminal window
 ```bash
 source crypto/bin/activate
 python3 main.py
 ```
 
-Second terminal window
+The 2nd terminal window
 ```bash
 source crypto/bin/activate
 python3 main5001.py
 ```
 
-Third terminal window
+The 3rd terminal window
 ```bash
 source crypto/bin/activate
 python3 main5002.py
