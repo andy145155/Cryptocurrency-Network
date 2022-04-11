@@ -41,7 +41,6 @@ class Blockchain:
             return False
 
         if not self.is_valid_proof(block, proof):
-            print("4")
             return False
 
         block.hash = proof
@@ -49,8 +48,6 @@ class Blockchain:
         return True
 
     def is_valid_proof(self, block, block_hash):
-        print("This is block hash: ", block_hash)
-        print("This is block compute hash: ", block.compute_hash())
         return (block_hash.startswith('0' * int(Blockchain.difficulty)) and block_hash == block.compute_hash())
         
     def proof_of_work(self, block):
@@ -68,7 +65,6 @@ class Blockchain:
             "5.0",
             None
         ).to_json()
-        print(json.loads(self.chain[-1]))
         self.unconfirmed_transactions.insert(0, block_reward)
         if not self.unconfirmed_transactions:
             return False
@@ -106,11 +102,6 @@ class Blockchain:
             if response.status_code == 200:
                 length = response.json()['length']
                 chain = response.json()['chain']
-                print("This is length: ", length)
-                print("This is chain: ", chain)
-                print("This is max_length: ", max_length)
-                print("This is self.vaild_chain(chain): ",
-                      self.vaild_chain(chain))
                 if length > max_length and self.vaild_chain(chain):
                     max_length = length
                     new_chain = chain
@@ -132,10 +123,8 @@ class Blockchain:
                                   block['previous_hash'],
                                   block['hash'],
                                   block['nonce'])
-            print("This is current block: ", block)
             if current_index + 1 < len(chain):
                 if current_block.compute_hash() != json.loads(chain[current_index + 1])['previous_hash']:
-                    print("1")
                     return False
             if isinstance(current_block.transactions, list):
                 for transaction in current_block.transactions:
@@ -147,10 +136,8 @@ class Blockchain:
                                                       transaction['value'],
                                                       transaction['signature'])
                     if not current_transaction.verify_transaction_signature():
-                        print("2")
                         return False
                 if not self.is_valid_proof(current_block, block['hash']):
-                    print("3")
                     return False
             current_index += 1
 

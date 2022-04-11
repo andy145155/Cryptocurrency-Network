@@ -80,7 +80,6 @@ def get_nodes():
 @app.route("/register_node", methods=['POST'])
 def register_node():
     value = request.form
-    print(value)
     node = value.get('node')
     com_port = value.get('com_port')
     if com_port is not None:

@@ -5,7 +5,10 @@
   </head>
   <body>
     <div>
+      <!-- Title -->
       <h1>User at PORT:{{user}}</h1>
+
+      <!-- Post request for connecting port 5000 and 5001 -->
       <form id="post_button_5001" action="/register_node" method="POST">
         <input
           type="submit"
@@ -15,7 +18,10 @@
         <div id="message"></div>
         <div id="nodes"></div>
       </form>
+
       <hr />
+
+      <!-- Post request for connecting port 5001 and 5002 -->
       <form id="post_button_5002" action="/register_node" method="POST">
         <input
           type="submit"
@@ -25,18 +31,23 @@
         <div id="message2"></div>
         <div id="nodes2"></div>
       </form>
+
       <hr />
+
+      <!-- Get request for showing the full chain of the client -->
       <form id="fullchain" action="/fullchain" method="GET">
         <h2>Show full chain</h2>
-        <input type="submit" value="3. fullchain" />
-        <div id="chain"></div>
-        <hr />
+        <input type="submit" value="3. Fullchain" />
+        <pre id="chain"></pre>
         <div id="length"></div>
       </form>
+
       <hr />
+
+      <!-- Get request for mining a new block -->
       <form id="mine" action="/mine" method="GET">
         <h2>Mine</h2>
-        <input type="submit" value="4. mine" />
+        <input type="submit" value="4. Mine" />
         <div id="hash"></div>
         <div id="index"></div>
         <div id="nonce"></div>
@@ -46,7 +57,10 @@
         <div id="transactions_recipient"></div>
         <div id="transactions_value"></div>
       </form>
+
       <hr />
+
+      <!-- Post request for adding a new transaction -->
       <h2>Transactions</h2>
       <form id="transaction" action="/new_transaction" method="POST">
         <label for="recipient">Recipient: </label>
@@ -54,7 +68,7 @@
           name="recipient"
           type="text"
           required
-          placeholder="Please enter the recipient"
+          placeholder="Please enter the recipient address"
         />
 
         <label for="value">Value: </label>
@@ -62,23 +76,28 @@
           name="value"
           type="text"
           required
-          placeholder="Please enter the value"
+          placeholder="Please enter the transaction value"
         />
 
         <button type="submit">Send</button>
         <div id="transaction_message"></div>
       </form>
-       <hr />
-       <form id="wallet" action="/get_wallet" method="GET">
+
+      <hr />
+
+      <!-- Get request for getting the wallet identity -->
+      <form id="wallet" action="/get_wallet" method="GET">
         <h2>Wallet Identity</h2>
         <input type="submit" value="5. Get Wallet Identity" />
         <div id="identity"></div>
       </form>
-    </div>
+
       <hr />
+
+      <!-- Post request to change the blockchain difficulty -->
       <h2>Change Difficulties</h2>
       <form id="difficulty" action="/change_difficuly" method="POST">
-        <label for="diff_value">Please input your difficulty: </label>
+        <label>Please input your difficulty: </label>
         <input
           name="diff_value"
           type="text"
@@ -88,8 +107,6 @@
         <button type="submit">Send</button>
         <div id="difficulty_message"></div>
       </form>
-
-      
     </div>
 
     <script>
@@ -105,13 +122,16 @@
         var posting = $.post(url, {
           node: "127.0.0.1:5000",
         });
-
+        let string = "";
         posting.done(function (data) {
-          console.log(data.total_nodes);
+          data.total_nodes.map((element) => {
+            string = string + "<br/>" + element;
+          });
           $("#message").html(data.message);
-          $("#nodes").html(data.total_nodes);
+          $("#nodes").html(string);
         });
       });
+
       /* This is the Javascript for getting connect 5001 data */
       $("#post_button_5002").submit(function (event) {
         event.preventDefault();
@@ -123,11 +143,14 @@
         var posting = $.post(url, {
           node: "127.0.0.1:5001",
         });
-
+        let string = "";
         posting.done(function (data) {
-          console.log(data.total_nodes);
+          data.total_nodes.map((element) => {
+            string = string + "<br/>" + element;
+          });
+
           $("#message2").html(data.message);
-          $("#nodes2").html(data.total_nodes);
+          $("#nodes2").html(string);
         });
       });
 
@@ -136,15 +159,35 @@
         event.preventDefault();
         $.get("/fullchain", function (data, statusText, xhr) {
           if (xhr.status == 200) {
-            console.log(JSON.parse(data.chain));
-            console.log(JSON.parse(data.chain).length);
             let string = "";
             JSON.parse(data.chain).map((element) => {
-              string = string + "<br/>" +"<br/>" +element;
-              console.log(element);
+              let string2 = [];
+              let json = {
+                index: JSON.parse(element).index,
+                timestamp: JSON.parse(element).timestamp,
+                previous_hash: JSON.parse(element).previous_hash,
+                hash: JSON.parse(element).hash,
+                nonce: JSON.parse(element).nonce,
+                transactions: [],
+              };
+
+              JSON.parse(element).transactions.map((tran) => {
+                transactions_json = {
+                  recipient: JSON.parse(tran).recipient,
+                  sender: JSON.parse(tran).sender,
+                  signature: JSON.parse(tran).signature,
+                  value: JSON.parse(tran).value,
+                };
+
+                string2.push(transactions_json);
+              });
+
+              json.transactions = string2;
+              string =
+                string + "<br/>" + "<br/>" + JSON.stringify(json, null, 2);
             });
-            $("#chain").html(string);
-            $("#length").html("Length: " + data.length);
+            $("#chain").html(string + "<br/>");
+            $("#length").html("Length of the chain: " + data.length);
           }
         });
       });
@@ -154,7 +197,6 @@
         event.preventDefault();
         $.get("/mine", function (data, statusText, xhr) {
           if (xhr.status == 200) {
-            console.log(JSON.parse(data.transactions[0]).sender);
             $("#hash").html("Hash: " + data.hash);
             $("#index").html("Index: " + data.index);
             $("#nonce").html("Nonce: " + data.nonce);
@@ -190,7 +232,6 @@
         });
 
         posting.done(function (data) {
-          console.log(data);
           $("#transaction_message").html(data.message);
         });
       });
@@ -205,7 +246,7 @@
 
         /* Send the data using post */
         var posting = $.post(url, {
-          number: number
+          number: number,
         });
 
         posting.done(function (data) {
@@ -214,14 +255,12 @@
         });
       });
 
-       /*This is the Javascript to get wallet data*/
+      /*This is the Javascript to get wallet data*/
       $("#wallet").submit(function (event) {
         event.preventDefault();
         $.get("/get_wallet", function (data, statusText, xhr) {
           if (xhr.status == 200) {
-            console.log((data));
             $("#identity").html(data);
-            
           }
         });
       });
