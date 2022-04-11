@@ -2,7 +2,7 @@
 
 This is the project for EE4017 Internet Finance 
 
-![test image size](pic/5000.png){:height="50%" width="50%"}
+<img src="pic/5000.png" width="50%" height="50%">
 
 Python version: 3.9.12
 
